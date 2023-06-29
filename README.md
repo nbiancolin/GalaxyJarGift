@@ -17,8 +17,7 @@
 
 ## Crafty Stuff
 ==*(You should know I am by no means a crafty person, and a lot of these went to waste bc it took me a few tries to get everything right)*==
-- Aluminum Foil
-- Paint
+- Stuffing (?)
 - 9 Volt Batteries
 
 ## Other stuff I used that I had lying around
