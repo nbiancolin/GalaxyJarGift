@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   socket.emit('setLights', lightState);
   socket.on('beep', (msg) => {
-    console.log('BEEP');
     lightState = !lightState; // Flips whether the light is on or off
     io.emit('setLights', lightState);
   });
