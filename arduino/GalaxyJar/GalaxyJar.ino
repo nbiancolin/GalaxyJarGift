@@ -1,3 +1,22 @@
+#include <Arduino.h>
+#include <SoftwareSerial.h>
+
+SoftwareSerial dbgSerial(2, 3); // RX, TX
+
+// * TODO: Delete wifi passwords
+String SSID[] = {"JUPITER", "Mytrle"};
+String PASS[] = {"Potatoes", "December2003"};
+
+char myChar; //for the serial stuff
+
+//#include <ESP8266WiFi.h>
+//#include <ESP8266WiFiMulti.h>
+
+//#include <SocketIoClient.h>
+
+#include <CapacitiveSensor.h>
+#include <FastLED.h>
+
 //All that wifi shit I have to do (Im sure I can figure it out)
 //Inspo for WIFI stuff: https://github.com/imjosh/espLedDimmer/tree/master  
 /**
@@ -15,13 +34,12 @@
 * TODO: Online - Setup socket.io and get web server squared away
 * TODO: Online - set up arduino code to connect to wifi and server
 * TODO: Online - set up arduino code to send and interpret messages from server
-* TODO: Craft - dye polyester
+* CHECKTODO: Craft - dye polyester
 * TODO: Misc - Solder circuit to protoboard / make both of the jars
 * Try to tick off at least one of these per day? (can even break them up to be smaller to "accomplish" more)
 */
 
-#include <CapacitiveSensor.h>
-#include <FastLED.h>
+
 
 CapacitiveSensor Sensor = CapacitiveSensor(12, 8);
                 //{b,g,r,b,r,g,b,y}  // Which pin does which colour
@@ -41,7 +59,7 @@ int buttonState = 0;  // variable for reading the pushbutton status
 long val;
 int h = 1; //range is 1 to 8
 int threshold = 5000;
-bool onlineMode = false; //false == offline mode
+bool onlineMode = true; //false == offline mode (flipped bc "toggle mode")
                    //true == online mode
 
 
@@ -75,7 +93,16 @@ int yellow[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};  //fill in the rest of these
 */
 
 void setup() {
-  Serial.begin(9600); //remove serial stuff for when disconnecting arduino
+  Serial.begin(115200);
+  Serial.setTimeout(5000);
+
+  //dbgSerial.begin(19200); //can't be faster than 19200 for softserial
+  dbgSerial.begin(38400);  //38400 works fine for me
+
+  dbgSerial.println("ESP8266 Demo");
+  delay(100);
+
+
   //for(int i = 0; i < 8; i++){
   //  pinMode(ledPins[i], OUTPUT);
   //}
@@ -90,14 +117,17 @@ void setup() {
     delay(30);
   }
   //if more stuff needs to be done
+
+  toggleMode();
+  /*
   for(int j = 0; j < 2; j++){
-    fill_solid(leds, NUM_LEDS, CRGB::White);
+    fill_solid(leds, NUM_LEDS, CRGB::Red);
     FastLED.show();
     delay(250);
     FastLED.clear();
     FastLED.show();
     delay(250);
-  }
+  }*/
   
 }
 
@@ -107,6 +137,14 @@ void loop() {
     //Do online stuff
   } else {
     interpretTap();
+  }
+  delay(30);
+
+//just add a some delay after everything is done so it doesn't check the button too often
+  buttonState = digitalRead(buttonPin);
+  if(buttonState == HIGH){
+    toggleMode();
+    delay(1000);
   }
 
   //delay(30);
@@ -126,6 +164,9 @@ void writeLED(int num){
 void killLED(){
   FastLED.clear();
   FastLED.show();
+}
+void writeGradient(){
+  return;
 }
 /*
 void oldWriteLED(int num){
@@ -172,7 +213,7 @@ void interpretTap(){  //should work?
       //Serial.println(val);
       //Serial.println("COunting Seconds");
     }
-    if(counter == 30){
+    if(counter == 30){ // TODO: this isn't working for some reason
       killLED();
       h-= 2;
       while(val >=threshold){
@@ -188,14 +229,112 @@ void interpretTap(){  //should work?
 void toggleMode(){
   onlineMode ^= true; //cool little xor boolean switcher
   if(onlineMode){
-    //do starting stuff for online mode
+    for(int j = 0; j < 2; j++){ //signals online mode
+      fill_solid(leds, NUM_LEDS, CRGB::Blue);
+      FastLED.show();
+      delay(250);
+      FastLED.clear();
+      FastLED.show();
+      delay(250);
+    }
+
+    //test if the module is ready
+    Serial.println("AT+RST");
+    if (Serial.find("ready")){
+      dbgSerial.println("Module is ready");
+      delay(1000);
+      //connect to the wifi
+      boolean connected = false;
+      for (int i = 0; i < 5; i++){
+        if (connectWiFi()) {
+          connected = true;
+          break;
+        }
+      }
+      if (!connected) {
+        errorHandler(0);
+      }
+
+      delay(5000);
+      //set the single connection mode
+      Serial.println("AT+CIPMUX=0");
+    } else {
+      dbgSerial.println("Module didn't respond.");
+      delay(100);
+
+      //serial loop mode for diag
+      while (1) {
+        while (dbgSerial.available()) {
+          myChar = dbgSerial.read();
+          Serial.print(myChar);
+          digitalWrite(13, HIGH);
+          delay(50);
+          digitalWrite(13, LOW);
+          delay(50);
+        }
+
+        while (Serial.available()) {
+          myChar = Serial.read();
+          delay(25);
+          dbgSerial.print(myChar);
+        }
+      }
+    }
+
   } else{
-    //do starting stuff for offline mode
+    for(int j = 0; j < 2; j++){ //signlas offline mode
+      fill_solid(leds, NUM_LEDS, CRGB::Red);
+      FastLED.show();
+      delay(250);
+      FastLED.clear();
+      FastLED.show();
+      delay(250);
+    }
+    writeLED(h);
   }
 }
 
 void tapOther(){
   //Do web stuff
   //lowkey scared for this shit, and I gotta write the webapp
+}
+
+void errorHandler(int val){
+  switch(val){
+    case 0:
+      while(true){
+         for(int i = 0; i < NUM_LEDS; i++){
+          leds[i] = CRGB::Orange;
+          FastLED.show();
+          leds[i] = CRGB::Black;
+          delay(70);
+        }
+      }
+      break;
+    default:
+      return;
+  }
+}
+
+boolean connectWiFi(){
+  fill_solid(leds, NUM_LEDS, CRGB::Orange);
+  FastLED.show();
+  for(int i = 0; i < 2; i++){
+    Serial.println("AT+CWMODE=1");
+    String cmd = "AT+CWJAP=\"";
+    cmd += SSID[i];
+    cmd += "\",\"";
+    cmd += PASS[i];
+    cmd += "\"";
+    dbgSerial.println(cmd);
+    Serial.println(cmd);
+    delay(2000);
+    if (Serial.find("OK")) {
+      dbgSerial.println("OK, Connected to WiFi.");
+      return true;
+    }
+  }
+  dbgSerial.println("Can not connect to the WiFi.");
+  return false;
 }
 
