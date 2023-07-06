@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    var socket = io('http://35.193.67.238:80');
+
+    socket.on('setLights', (lightState) => { // lightState is given by the server and is either True or False
+      let text = lightState ? 'ON' : 'OFF';
+      document.getElementById('mainText').innerHTML = text;
+    });
+
+    function sendSignal() {
+      socket.emit('beep', {});
+    }
+  </script>
+</head>
+<body>
+  <h1 id="mainText"></h1>
+  <button type="button" id="button" onclick="sendSignal()">Click Me!</button>
+</body>
