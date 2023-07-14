@@ -4,7 +4,11 @@ const http = require('http');
 const { setUncaughtExceptionCaptureCallback } = require('process');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: true
+  }
+});
 
 const CONFIG = require('./config.json');
 
