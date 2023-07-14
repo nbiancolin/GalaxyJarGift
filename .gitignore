@@ -1,3 +1,4 @@
 private/
 webserver/node_modules/
 webserver/config.json
+arduino/NewGalaxyJar/wifi.h

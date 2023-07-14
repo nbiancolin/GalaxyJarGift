@@ -1,21 +1,26 @@
-#include <Arduino.h>
-#include <SoftwareSerial.h>
-
-SoftwareSerial dbgSerial(2, 3); // RX, TX
-
 // * TODO: Delete wifi passwords
 String SSID[] = {"JUPITER", "Mytrle"};
 String PASS[] = {"Potatoes", "December2003"};
 
-char myChar; //for the serial stuff
-
-//#include <ESP8266WiFi.h>
-//#include <ESP8266WiFiMulti.h>
+//#include <ESP8266WiFi.h> //need to learn abt these libraries
+//#include <ESP8266WiFiMulti.h> 
 
 //#include <SocketIoClient.h>
 
 #include <CapacitiveSensor.h>
 #include <FastLED.h>
+
+#define D0  16
+#define D1  5  // I2C Bus SCL (clock)
+#define D2  4  // I2C Bus SDA (data)
+#define D3  0
+#define D4  2  // Same as "LED_BUILTIN", but inverted logic
+#define D5  14 // SPI Bus SCK (clock)
+#define D6  12 // SPI Bus MISO 
+#define D7  13 // SPI Bus MOSI
+#define D8  15 // SPI Bus SS (CS)
+#define D9  3  // RX0 (Serial console)
+#define D10 1  // TX0 (Serial console)
 
 //All that wifi shit I have to do (Im sure I can figure it out)
 //Inspo for WIFI stuff: https://github.com/imjosh/espLedDimmer/tree/master  
@@ -31,9 +36,8 @@ char myChar; //for the serial stuff
 /** *TODO*
 * CHECKTODO: Offline - get light colours set up, write new "writeLED" function CHECK
 * TODO: Offline - Make new colour profiles (task for later later)
-* TODO: Online - Setup socket.io and get web server squared away
-* TODO: Online - set up arduino code to connect to wifi and server
-* TODO: Online - set up arduino code to send and interpret messages from server
+* CHECKTODO: Online - Setup socket.io and get web server squared away
+* TODO: Online - set up arduino code to connect to wifi and server and use socketio functions
 * CHECKTODO: Craft - dye polyester
 * TODO: Misc - Solder circuit to protoboard / make both of the jars
 * Try to tick off at least one of these per day? (can even break them up to be smaller to "accomplish" more)
@@ -41,19 +45,13 @@ char myChar; //for the serial stuff
 
 
 
-CapacitiveSensor Sensor = CapacitiveSensor(12, 8);
-                //{b,g,r,b,r,g,b,y}  // Which pin does which colour
-//int ledPins[] = {2,3,4,5,6,7,8,9};  OLD
-
-              //{b,g,r,b, g, r,y,b}
-//int ledPins[] = {3,5,6,9,10,11,2,4} DEPRECATED
-
+CapacitiveSensor Sensor = CapacitiveSensor(6, 8);
 #define NUM_LEDS 20
-#define DATA_PIN 5
+#define DATA_PIN D3
 
 CRGB leds[NUM_LEDS];
 
-int buttonPin = 7;
+int buttonPin = D1;
 int buttonState = 0;  // variable for reading the pushbutton status
 
 long val;
@@ -63,13 +61,9 @@ bool onlineMode = true; //false == offline mode (flipped bc "toggle mode")
                    //true == online mode
 
 
-int reds[] = {0, 255, 153, 133, 107, 72, 43, 20, 7}; //deprecated
+int reds[] = {0, 255, 153, 133, 107, 72, 43, 20, 7}; //should update these but what the hell
 int greens[] = {0, 153, 51, 89, 73, 52, 47, 24, 11};
 int blues[] = {0, 0, 255, 186, 132, 117, 119, 82, 52};
-int blue[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};  //fill in the rest of these
-int yellow[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};  //fill in the rest of these
-
-
 
 //OFFLINE STUFF
 
@@ -94,21 +88,15 @@ int yellow[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};  //fill in the rest of these
 
 void setup() {
   Serial.begin(115200);
-  Serial.setTimeout(5000);
-
-  //dbgSerial.begin(19200); //can't be faster than 19200 for softserial
-  dbgSerial.begin(38400);  //38400 works fine for me
-
-  dbgSerial.println("ESP8266 Demo");
-  delay(100);
-
 
   //for(int i = 0; i < 8; i++){
   //  pinMode(ledPins[i], OUTPUT);
   //}
+  Serial.println("Code initialized");
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   pinMode(buttonPin, INPUT);
   delay(10);
+  Serial.println("FastLED setup completed");
   //flash white once to signify turned on
   for(int i = 0; i < NUM_LEDS; i++){
     leds[i] = CRGB::White;
@@ -116,9 +104,11 @@ void setup() {
     leds[i] = CRGB::Black;
     delay(30);
   }
+  Serial.println("Start LED sequence completed");
   //if more stuff needs to be done
 
   toggleMode();
+  Serial.println("Mode Toggled");
   /*
   for(int j = 0; j < 2; j++){
     fill_solid(leds, NUM_LEDS, CRGB::Red);
@@ -132,11 +122,11 @@ void setup() {
 }
 
 void loop() {
-  //h = 1;
+
   if(onlineMode){
     //Do online stuff
   } else {
-    interpretTap();
+    oldInterpretTap();
   }
   delay(30);
 
@@ -156,6 +146,7 @@ void loop() {
   //  toggleMode();
   //}
   //delay(10);
+  
 }
 void writeLED(int num){
   fill_solid(leds, NUM_LEDS, CRGB(reds[h], greens[h], blues[h]));
@@ -168,30 +159,12 @@ void killLED(){
 void writeGradient(){
   return;
 }
-/*
-void oldWriteLED(int num){
-  analogWrite(ledPins[2], reds[num]);
-  analogWrite(ledPins[1], greens[num]);
-  analogWrite(ledPins[0], blues[num]);
-  analogWrite(ledPins[5], reds[num]);
-  analogWrite(ledPins[4], greens[num]);
-  analogWrite(ledPins[3], blues[num]);
-  analogWrite(ledPins[6], blue[num]);
-  analogWrite(ledPins[7], yellow[num]);
+
+void offlineInterpretTap(){
+  val = Sensor.capacitiveSensor(30);
 }
 
-void oldKillLED(){
-  analogWrite(ledPins[2], reds[0]);
-  analogWrite(ledPins[1], greens[0]);
-  analogWrite(ledPins[0], blues[0]);
-  analogWrite(ledPins[5], reds[0]);
-  analogWrite(ledPins[4], greens[0]);
-  analogWrite(ledPins[3], blues[0]);
-  analogWrite(ledPins[6], blue[0]);
-  analogWrite(ledPins[7], yellow[0]);
-} */
-
-void interpretTap(){  //should work?
+void oldInterpretTap(){  //should work?
   val = Sensor.capacitiveSensor(30);
   //Serial.println(val);
   if(val <= threshold) {
@@ -238,48 +211,6 @@ void toggleMode(){
       delay(250);
     }
 
-    //test if the module is ready
-    Serial.println("AT+RST");
-    if (Serial.find("ready")){
-      dbgSerial.println("Module is ready");
-      delay(1000);
-      //connect to the wifi
-      boolean connected = false;
-      for (int i = 0; i < 5; i++){
-        if (connectWiFi()) {
-          connected = true;
-          break;
-        }
-      }
-      if (!connected) {
-        errorHandler(0);
-      }
-
-      delay(5000);
-      //set the single connection mode
-      Serial.println("AT+CIPMUX=0");
-    } else {
-      dbgSerial.println("Module didn't respond.");
-      delay(100);
-
-      //serial loop mode for diag
-      while (1) {
-        while (dbgSerial.available()) {
-          myChar = dbgSerial.read();
-          Serial.print(myChar);
-          digitalWrite(13, HIGH);
-          delay(50);
-          digitalWrite(13, LOW);
-          delay(50);
-        }
-
-        while (Serial.available()) {
-          myChar = Serial.read();
-          delay(25);
-          dbgSerial.print(myChar);
-        }
-      }
-    }
 
   } else{
     for(int j = 0; j < 2; j++){ //signlas offline mode
@@ -316,6 +247,7 @@ void errorHandler(int val){
   }
 }
 
+/*
 boolean connectWiFi(){
   fill_solid(leds, NUM_LEDS, CRGB::Orange);
   FastLED.show();
@@ -336,5 +268,5 @@ boolean connectWiFi(){
   }
   dbgSerial.println("Can not connect to the WiFi.");
   return false;
-}
+}*/
 
