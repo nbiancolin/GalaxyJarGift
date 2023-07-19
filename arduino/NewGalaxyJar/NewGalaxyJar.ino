@@ -43,9 +43,10 @@ CapacitiveSensor Sensor = CapacitiveSensor(12, 15); //pins 6 and 8 are actually 
 #define NUM_LEDS 20
 #define DATA_PIN 2 //pin 4 is gpio 2 (alt 17)
 CRGB leds[NUM_LEDS];
+#define BUTTON_PIN 5 //pin 1 is GPIO 5 (alt 20)
 
 long val;
-int h = 1; //range is 1 to 8
+int h = 1; //range is 1 to 4 (for now)
 int threshold = 45; //tinker with this so that it works with the correct voltage
 
 bool state = false;
@@ -133,6 +134,7 @@ void setup() {
   } else {
     Serial.println("An Error Occured in startup. Try restarting!");
   }
+  pinMode(BUTTON_PIN, INPUT);
 }
 
 unsigned long messageTimestamp = 0;
@@ -142,12 +144,14 @@ void loop() {
 
   if(state){
     writeLED();
+    changeColour();
     return;
   } else{
     killLED();
     val = Sensor.capacitiveSensor(30);
     Serial.println(val);
     if(val <= threshold) {
+      changeColour();
       return; //means that there is no input, 
     } else {
       //socketIO.loop(); //incase somehow the other button was pressed at *exactly* the same time
@@ -180,10 +184,31 @@ void loop() {
   //check for button (doesn't work, maybe delete this entirely?)
 }
 
+void changeColour(){
+  //check for button press
+  Serial.println("Reading for button");
+  Serial.println(digitalRead(BUTTON_PIN));
+  if(digitalRead(BUTTON_PIN) == 1){
+    return;//if not pressed, return
+  } else{
+    //if pressed, increase h, then wait for button release
+    h++;
+    Serial.println("changing colour");
+    if(h >=5){
+      h = 0;
+    }
+    writeLED();
+    delay(500);
+    killLED();
+  }
+  return;
+  
+}
+
 void sendBeep(){
   uint64_t now = millis();
 
-    if(now - messageTimestamp > 100) {
+    if(now - messageTimestamp > 50) {
         messageTimestamp = now;
 
         // creat JSON message for Socket.IO (event)
@@ -210,7 +235,24 @@ void sendBeep(){
     }
 }
 void writeLED(){
-  fill_gradient_RGB(leds, NUM_LEDS, CRGB::Blue, CRGB::Purple);
+  switch(h){
+    case 0:
+      break;
+    case 1:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Blue, CRGB::Purple);
+      break;
+    case 2:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Orange, CRGB::Yellow);
+      break;
+    case 3:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Purple, CRGB::Blue);
+      break;
+    case 4:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Red, CRGB::Yellow);
+      break;
+    default:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Blue, CRGB::Purple);
+  }
   FastLED.show();
 }
 void killLED(){
