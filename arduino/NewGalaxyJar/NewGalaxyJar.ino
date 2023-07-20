@@ -32,8 +32,10 @@
 
 
 //Wifi Passwords (should delete these later but oh well)
-const char * SSID[] = {"JUPITER", "Mytrle"};
-const char * PASS[] = {"Potatoes", "December2003"};
+const char * SSID[] = {"JUPITER", "Mytrle", "JUPITER"};
+const char * PASS[] = {"Potatoes", "December2003", "Potatoes"};
+//const char * SSID[] = {"Mytrle", "JUPITER"};
+//const char * PASS[] = {"December2003", "Potatoes"};
 
 
 
@@ -43,7 +45,7 @@ CapacitiveSensor Sensor = CapacitiveSensor(12, 15); //pins 6 and 8 are actually 
 #define NUM_LEDS 20
 #define DATA_PIN 2 //pin 4 is gpio 2 (alt 17)
 CRGB leds[NUM_LEDS];
-#define BUTTON_PIN 5 //pin 1 is GPIO 5 (alt 20)
+#define BUTTON_PIN 4 //pin 2 is GPIO 4
 
 long val;
 int h = 1; //range is 1 to 4 (for now)
@@ -149,7 +151,7 @@ void loop() {
   } else{
     killLED();
     val = Sensor.capacitiveSensor(30);
-    Serial.println(val);
+    //Serial.println(val);
     if(val <= threshold) {
       changeColour();
       return; //means that there is no input, 
@@ -186,9 +188,9 @@ void loop() {
 
 void changeColour(){
   //check for button press
-  Serial.println("Reading for button");
-  Serial.println(digitalRead(BUTTON_PIN));
-  if(digitalRead(BUTTON_PIN) == 1){
+  //Serial.println("Reading for button");
+  //Serial.println(digitalRead(BUTTON_PIN));
+  if(digitalRead(BUTTON_PIN) == 0){
     return;//if not pressed, return
   } else{
     //if pressed, increase h, then wait for button release
@@ -200,6 +202,7 @@ void changeColour(){
     writeLED();
     delay(500);
     killLED();
+    delay(500);
   }
   return;
   
