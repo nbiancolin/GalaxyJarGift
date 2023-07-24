@@ -178,12 +178,7 @@ void loop() {
 
     
 
-    //ping server to check for state changes
-    //if led should be on, do nothing, keep checking for changes
-    //if led should be off, check for touch
-    //if not touched, return to checking for changes
-
-  //check for button (doesn't work, maybe delete this entirely?)
+   
 }
 
 void changeColour(){
@@ -196,8 +191,8 @@ void changeColour(){
     //if pressed, increase h, then wait for button release
     h++;
     Serial.println("changing colour");
-    if(h >=5){
-      h = 0;
+    if(h >=9){
+      h = 1;
     }
     writeLED();
     delay(500);
@@ -245,13 +240,25 @@ void writeLED(){
       fill_gradient_RGB(leds, NUM_LEDS, CRGB::Blue, CRGB::Purple);
       break;
     case 2:
-      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Orange, CRGB::Yellow);
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Red, CRGB::Orange);
       break;
     case 3:
       fill_gradient_RGB(leds, NUM_LEDS, CRGB::Purple, CRGB::Blue);
       break;
     case 4:
-      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Red, CRGB::Yellow);
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Yellow, CRGB::Red);
+      break;
+    case 5:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB(17,136,136), CRGB(17,33,136));
+      break;
+    case 6:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB(17,136,136), CRGB(250, 168,35));
+      break;
+    case 7:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Purple, CRGB::Blue);
+      break;
+    case 8:
+      fill_gradient_RGB(leds, NUM_LEDS, CRGB::Red, CRGB::Orange);
       break;
     default:
       fill_gradient_RGB(leds, NUM_LEDS, CRGB::Blue, CRGB::Purple);
