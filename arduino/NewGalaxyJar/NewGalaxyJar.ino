@@ -42,14 +42,14 @@ const char * PASS[] = {"Potatoes", "December2003", "Potatoes"};
 //setup values and things
 CapacitiveSensor Sensor = CapacitiveSensor(12, 15); //pins 6 and 8 are actually gpio 12 and 15 (if this doesn't work, try 6 and 16)
 
-#define NUM_LEDS 20
+#define NUM_LEDS 26 // 31
 #define DATA_PIN 2 //pin 4 is gpio 2 (alt 17)
 CRGB leds[NUM_LEDS];
 #define BUTTON_PIN 4 //pin 2 is GPIO 4
 
 long val;
 int h = 1; //range is 1 to 4 (for now)
-int threshold = 45; //tinker with this so that it works with the correct voltage
+int threshold = 40; //tinker with this so that it works with the correct voltage
 
 bool state = false;
 
