@@ -35,24 +35,15 @@ When you tap the lid of the mason jar, it lights up LEDs in the interior of the 
 - 2 toilet paper rolls
 
 ## Other stuff I used that I had lying around
-
+- A bunch of wires
 - 
 
 # How I made it
 
 \*cue Ted from HIMYM's Voice\*: *"It really wasn't that hard. 
-All I had to do was buy some microcontrollers and some other parts off of amazon. Realize that you need to buy other LEDs. Go and buy other LEDs. Learn how Socket.IO works, and try and build a server. Give up and beg your friend to set it up for you. (in hindsight it lowkey was not that complex and and I could have probably figure it out, but I am so grateful for Nathan's help). Realize that the wifi modules don't work. Buy new microcontrollers with wifi modules built in. Try 5 different libraries for connecting the controllers to socket.io server with no luck. Finally get it to work on a whim. Realize that the batteries you bought have too high of a voltage and are going to fry the controllers. Find a way to make the right voltage frantically a couple nights before. Solder everything together, assemble the whole thing, and pray she likes it.*
+All I had to do was buy some microcontrollers and some other parts off of amazon. Realize that you need to buy other LEDs. Go and buy other LEDs. Learn how Socket.IO works, and try and build a server. Give up and beg your friend to set it up for you. (in hindsight it lowkey was not that complex and and I could have probably figure it out, but I am so grateful for Nathan's help). Realize that the wifi modules don't work. Buy new microcontrollers with wifi modules built in. Try 5 different libraries for connecting the controllers to socket.io server with no luck. Finally get it to work on a whim. Realize that the batteries you bought have too high of a voltage and are going to fry the controllers. Find a way to make the right voltage frantically a couple nights before. Solder everything together, Re-solder half of the connections because they were soldered incorrectly. Realize that capacitive touch sensors don't work when powered solely by batteries bc there is no ground, and frantically try and find a way to make it work. Finally get everything working after a month and a bit of every single hurdle that could ever*
 
-lmao it was certainly a challenge to do this all, but I learned a lot and I'm realy happy with the 
-
-
+lmao it was certainly a challenge to do this all, but I learned a lot and I'm realy happy with the end result.
 
 
-Craft:
-- Stuffing (cotton balls)
-dye stuffing with food colouring
 
-take bowl, put food colouring with water
-put stuffing in food colouring mixture
-
-(let sit for hour ot 2 then dry stuffing by leaving it on paper towel)
