@@ -32,17 +32,17 @@
 
 
 //Wifi Passwords (should delete these later but oh well)
-const char * SSID[] = {"JUPITER", "Mytrle", "JUPITER"};
-const char * PASS[] = {"Potatoes", "December2003", "Potatoes"};
-//const char * SSID[] = {"Mytrle", "JUPITER"};
-//const char * PASS[] = {"December2003", "Potatoes"};
+//const char * SSID[] = {"JUPITER", "Myrtle", "JUPITER"};
+//const char * PASS[] = {"Potatoes", "December2003", "Potatoes"};
+const char * SSID[] = {"Mytrle", "JUPITER"};
+const char * PASS[] = {"December2003", "Potatoes"};
 
 
 
 //setup values and things
 CapacitiveSensor Sensor = CapacitiveSensor(12, 15); //pins 6 and 8 are actually gpio 12 and 15 (if this doesn't work, try 6 and 16)
 
-#define NUM_LEDS 26 // 31
+#define NUM_LEDS 31 // 31
 #define DATA_PIN 2 //pin 4 is gpio 2 (alt 17)
 CRGB leds[NUM_LEDS];
 #define BUTTON_PIN 4 //pin 2 is GPIO 4
@@ -146,14 +146,14 @@ void loop() {
 
   if(state){
     writeLED();
-    changeColour();
+    //changeColour();
     return;
   } else{
     killLED();
     val = Sensor.capacitiveSensor(30);
     //Serial.println(val);
     if(val <= threshold) {
-      changeColour();
+      //changeColour();
       return; //means that there is no input, 
     } else {
       //socketIO.loop(); //incase somehow the other button was pressed at *exactly* the same time

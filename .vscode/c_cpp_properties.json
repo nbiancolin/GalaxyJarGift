@@ -18,7 +18,8 @@
             "includePath": [
                 "C:\\Users\\Nicholas\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
                 "C:\\Users\\Nicholas\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\eightanaloginputs",
-                "D:\\User Stuff\\Documents\\Arduino\\libraries\\CapacitiveSensor",
+                "D:\\User Stuff\\Documents\\Arduino\\libraries\\CapacitiveSensor-master",
+                "D:\\User Stuff\\Documents\\Arduino\\libraries\\FastLED\\src",
                 "c:\\users\\nicholas\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include",
                 "c:\\users\\nicholas\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\lib\\gcc\\avr\\7.3.0\\include-fixed",
                 "c:\\users\\nicholas\\appdata\\local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\avr\\include"
