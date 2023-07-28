@@ -34,7 +34,7 @@
 //Wifi Passwords (should delete these later but oh well)
 //const char * SSID[] = {"JUPITER", "Myrtle", "JUPITER"};
 //const char * PASS[] = {"Potatoes", "December2003", "Potatoes"};
-const char * SSID[] = {"Mytrle", "JUPITER"};
+const char * SSID[] = {"Myrtle", "JUPITER"};
 const char * PASS[] = {"December2003", "Potatoes"};
 
 
@@ -49,7 +49,7 @@ CRGB leds[NUM_LEDS];
 
 long val;
 int h = 1; //range is 1 to 4 (for now)
-int threshold = 40; //tinker with this so that it works with the correct voltage
+int threshold = 45; //tinker with this so that it works with the correct voltage
 
 bool state = false;
 
