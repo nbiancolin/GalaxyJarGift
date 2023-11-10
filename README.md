@@ -9,9 +9,8 @@ The perfect gift you could give to your special someone. A tech-y twist on a cut
 
 When you tap the lid of the mason jar, it lights up LEDs in the interior of the LED, as well as the lights on any other Galaxy Jar connected to the internet.
 
-(add some pictures)
-./img/video1.mp4
-./img/video2.mp4
+![](./img/video1.mp4)
+![](./img/video2.mp4)
 
 (if you want me to make you a set, send me an email: n.biancolin[at]mail.utoronto.ca)
 
@@ -43,20 +42,20 @@ When you tap the lid of the mason jar, it lights up LEDs in the interior of the 
 
 ## Step 1 - Prep Jars
 
-I dyed the poly-fill to be as dark as I could so that the lights would look like stars in the sky, and I did that by boiling some water, putting the dye in there, and soaking the dye.
-![Dying the poly-fill](./img/step1-1.jpg)
+I dyed the poly-fill to be as dark as I could so that the lights would look like stars in the sky, and I did that by boiling some water, putting the dye in there, and soaking the dye.\\
+![Dying the poly-fill](./img/step1-1.jpg) 
 
-I also cut the led strips and wrapped them around empty toilet paper roles, using electrical tape to fasten the strips to the roll.
+I also cut the led strips and wrapped them around empty toilet paper roles, using electrical tape to fasten the strips to the roll. \\
 ![LED strips taped on](./img/step1-2.jpg)
 
 ## Step 2 - Write code
 
-This step was suprisingly difficult. I dealt with lots of hardware issues (cheap components giving up midway through) but once all of those issues were sorted it was relatively straight-forward. My friend Nathan (Spoink2022) helped me set up a node.js socket.io server to communicate between all the arduinos. This way, whenever there is an update (tap), the server just sends out a ping to all the arduinos to turn on, and once the signal turns off it sends another ping. You can see all of this code in the "NewGalaxyJar.ino" file.
+This step was suprisingly difficult. I dealt with lots of hardware issues (cheap components giving up midway through) but once all of those issues were sorted it was relatively straight-forward. My friend Nathan (Spoink2022) helped me set up a node.js socket.io server to communicate between all the arduinos. This way, whenever there is an update (tap), the server just sends out a ping to all the arduinos to turn on, and once the signal turns off it sends another ping. You can see all of this code in the "NewGalaxyJar.ino" file. \\
 ![Starting to write code with the LEDs](./img/step2-1.jpg)
 
 ## Step 3 - Assemble
 
-Put it all together! This involved soldering all the wires to pin headers (so that Im not soldering directly on the arduino bc I'd like to use them again), and actually assembling the jars. They ended up being quite a tight fit with the batteries and the arduino and the wires that went with it, but I managed to fit it all in, and the result was amazing.
+Put it all together! This involved soldering all the wires to pin headers (so that Im not soldering directly on the arduino bc I'd like to use them again), and actually assembling the jars. They ended up being quite a tight fit with the batteries and the arduino and the wires that went with it, but I managed to fit it all in, and the result was amazing.\\
 ![Assembling everything](./img/step3-1.jpg)
 
 
