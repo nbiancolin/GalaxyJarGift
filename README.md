@@ -1,5 +1,6 @@
 # GalaxyJarGift
 
+* Check out the more fleshed out brief on [this link] (https://nbiancolin.github.io/GalaxyJar.md)
 The perfect gift you could give to your special someone. A tech-y twist on a cute gift.
 
 "You stepped into my world like a galaxy bursting in front of an astonomers telescope. Tell me, with all those speckles on your skin, did anyone tell you that you are a constellation waiting to be loved and explored"
@@ -63,5 +64,5 @@ This project was really fun, it was a great way to get more experience dealing w
 
 
 
-\*cue Ted from HIMYM's Voice\*: *"It really wasn't that hard. 
+> \*cue Ted from HIMYM's Voice\*: *"It really wasn't that hard. 
 All I had to do was buy some microcontrollers and some other parts off of amazon. Realize that you need to buy other LEDs. Go and buy other LEDs. Learn how Socket.IO works, and try and build a server. Give up and beg your friend to set it up for you. (in hindsight it lowkey was not that complex and and I could have probably figure it out, but I am so grateful for Nathan's help). Realize that the wifi modules don't work. Buy new microcontrollers with wifi modules built in. Try 5 different libraries for connecting the controllers to socket.io server with no luck. Finally get it to work on a whim. Realize that the batteries you bought have too high of a voltage and are going to fry the controllers. Find a way to make the right voltage frantically a couple nights before. Solder everything together, Re-solder half of the connections because they were soldered incorrectly. Realize that capacitive touch sensors don't work when powered solely by batteries bc there is no ground, and frantically try and find a way to make it work. Finally get everything working after a month and a bit of every single hurdle that could ever*
