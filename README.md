@@ -1,6 +1,6 @@
 # GalaxyJarGift
 
-* Check out the more fleshed out brief on [this link] (https://nbiancolin.github.io/GalaxyJar.md)
+* Check out the more fleshed out brief on [this link](https://nbiancolin.github.io/GalaxyJar)
 The perfect gift you could give to your special someone. A tech-y twist on a cute gift.
 
 "You stepped into my world like a galaxy bursting in front of an astonomers telescope. Tell me, with all those speckles on your skin, did anyone tell you that you are a constellation waiting to be loved and explored"
